@@ -10,7 +10,7 @@
 #  'make configure' may also work, but with error
 #   messages.
 
-SOURCES = flask_map.py map.py
+SOURCES = flask_maps.py maps.py
 
 Makefile.local: 
 	bash ./configure
@@ -35,7 +35,7 @@ dist:
 #  with debugging turned on unless it is unset in CONFIG.py
 # 
 run:	$(SOURCES) env
-	( . env/bin/activate; python3 flask_map.py ) || true
+	( . env/bin/activate; python3 flask_maps.py ) || true
 
 # 'make service' runs as a background job under the gunicorn 
 #  WSGI server. FIXME:  A real production service would use 

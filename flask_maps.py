@@ -27,7 +27,7 @@ import CONFIG
 @app.route("/index")
 def index():
     app.logger.debug("Main page entry")
-    return flask.render_template('map.html')
+    return flask.render_template('maps.html')
 
 
 @app.errorhandler(404)
