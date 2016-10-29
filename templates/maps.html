@@ -27,21 +27,12 @@
   </script>
 
   <!-- Geocoding plugin for Leaflet from MapQuest -->
-  <link rel="stylesheet" 
-      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
-  />
-  
-  <script 
-      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js">
-  </script>
   <script 
       src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=vQ11koWJrQ5ECGj2bAH5BdK3KmYNeJBa">
   </script>
   <script 
       src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-geocoding.js?key=vQ11koWJrQ5ECGj2bAH5BdK3KmYNeJBa">
   </script>
-
-
 
 </head>
 
@@ -71,24 +62,43 @@
 
 <script type="text/javascript">
 
+
 window.onload = function() {
 
-  var popup = L.popup(),
-    geocode,
-    map;
+  // Initialize the map.
+  eugeneMap = L.map('map', {
+      center: [ 44.05207, -123.08675 ],
+      zoom: 14, 
+    }
+  );
 
-  var map = L.map('map', {
-    layers: MQ.mapLayer(),
-    center: [ 44.05207, -123.08675 ],
-    zoom: 14 })
-    .on('click', function(e) {
-      popup.setLatLng(e.latlng).openOn(this);
-      geocode.reverse(e.latlng);
+  // Add the MapQuest layer for reverse geocoding
+  eugeneMap.addLayer(MQ.mapLayer());
+
+  // Assign the click handler function to the click event
+  eugeneMap.on('click', onMapClick);
+
+  // Map click handler function
+  function onMapClick(e, map=eugeneMap) {
+
+    // Assign pinpoint and add it to the map
+    var pinpoint = L.marker(e.latlng).addTo(map);
+
+    // Assign popup
+    var popup = L.popup(e.latlng),
+      geocode,
+      map;
+
+    // Assign geocode, getting the location details and loading
+    // them into the popup
+    geocode = MQ.geocode().on('success', function(e) {
+      popup.setContent(geocode.describeLocation(e.result.best));
     });
-  
-  geocode = MQ.geocode().on('success', function(e) {
-    popup.setContent(geocode.describeLocation(e.result.best));
-  });
+    geocode.reverse(e.latlng);
+
+    // Bind the popup to the pinpoint marker
+    pinpoint.bindPopup(popup);
+  }
 
 }
 

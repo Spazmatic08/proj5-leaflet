@@ -1,4 +1,5 @@
 CONFIG.py
+Makefile.local
 
 # The rest are standard ignores from github
 
