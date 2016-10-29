@@ -7,7 +7,7 @@
 	"https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
 
   <!-- 'viewport' is used by bootstrap to respond to device size -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1", maximum-scale=1, user-scalable=no">
 
   <!-- Javascript:  JQuery from a content distribution network (CDN) -->
   <script
@@ -25,6 +25,23 @@
   <script 
       src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js">
   </script>
+
+  <!-- Geocoding plugin for Leaflet from MapQuest -->
+  <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
+  />
+  
+  <script 
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js">
+  </script>
+  <script 
+      src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-map.js?key=vQ11koWJrQ5ECGj2bAH5BdK3KmYNeJBa">
+  </script>
+  <script 
+      src="https://www.mapquestapi.com/sdk/leaflet/v2.2/mq-geocoding.js?key=vQ11koWJrQ5ECGj2bAH5BdK3KmYNeJBa">
+  </script>
+
+
 
 </head>
 
@@ -48,8 +65,34 @@
   {% endif %}
 {% endwith %}
 
-<div id="mapid"></div>
+<div id="map"></div>
 
 </div> 
+
+<script type="text/javascript">
+
+window.onload = function() {
+
+  var popup = L.popup(),
+    geocode,
+    map;
+
+  var map = L.map('map', {
+    layers: MQ.mapLayer(),
+    center: [ 44.05207, -123.08675 ],
+    zoom: 14 })
+    .on('click', function(e) {
+      popup.setLatLng(e.latlng).openOn(this);
+      geocode.reverse(e.latlng);
+    });
+  
+  geocode = MQ.geocode().on('success', function(e) {
+    popup.setContent(geocode.describeLocation(e.result.best));
+  });
+
+}
+
+</script>
+
 </body>
 </html>
