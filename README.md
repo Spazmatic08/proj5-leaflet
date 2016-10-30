@@ -37,4 +37,4 @@ recognizable in their database. Recommend switching to a better API.
 ## Contact
 
 You may contact me over email if you have questions regarding the code at
-adibb@cis.uoregon.edu. 
+adibb@cs.uoregon.edu. 
