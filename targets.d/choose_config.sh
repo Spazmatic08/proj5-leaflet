@@ -34,7 +34,7 @@ Edit to fit development or deployment environment.
 PORT=${port}
 DEBUG = True  # Set to False for production use
 secret_key="${secret}"
-poi=data/poi.txt
+poi="data/poi.txt"
 
 EOF
 }
