@@ -92,12 +92,20 @@ window.onload = function() {
     // Assign geocode, getting the location details and loading
     // them into the popup
     geocode = MQ.geocode().on('success', function(e) {
-      POIPopup.setContent(geocode.describeLocation(e.result.best));
+      POIPopup.setContent('<p><strong>'+ 
+	point +
+	': </strong></p>' + 
+	geocode.describeLocation(e.result.best));
     });
     geocode.reverse(latlng);
 
     // Bind the popup to the marker
     POIMarker.bindPopup(POIPopup);
+
+    // Append the POI's name to the popup
+    var location = POIPopup.getContent();
+    console.log(location);
+    POIPopup.update();
   }
 
   // Assign the click handler function to the click event
