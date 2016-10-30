@@ -62,18 +62,43 @@
 
 <script type="text/javascript">
 
-
 window.onload = function() {
 
   // Initialize the map.
   eugeneMap = L.map('map', {
       center: [ 44.05207, -123.08675 ],
-      zoom: 14, 
+      zoom: 14
     }
   );
 
   // Add the MapQuest layer for reverse geocoding
   eugeneMap.addLayer(MQ.mapLayer());
+
+  // Mark all of the POIs
+  var POIs = {{ g.get('poi', None)|safe }}
+  console.dir(POIs)
+
+  for (point in POIs){
+    console.log("Got a POI: " + point);
+    // Get the latitude and longitude of the POI
+    var latlng = L.latLng(POIs[point][0], POIs[point][1]);
+
+    // Set a marker
+    var POIMarker = L.marker(latlng).addTo(eugeneMap);
+
+    // Create the popup for the marker
+    var POIPopup = L.popup();
+    
+    // Assign geocode, getting the location details and loading
+    // them into the popup
+    geocode = MQ.geocode().on('success', function(e) {
+      POIPopup.setContent(geocode.describeLocation(e.result.best));
+    });
+    geocode.reverse(latlng);
+
+    // Bind the popup to the marker
+    POIMarker.bindPopup(POIPopup);
+  }
 
   // Assign the click handler function to the click event
   eugeneMap.on('click', onMapClick);
@@ -81,13 +106,13 @@ window.onload = function() {
   // Map click handler function
   function onMapClick(e, map=eugeneMap) {
 
+    console.dir(e.latlng);
+
     // Assign pinpoint and add it to the map
     var pinpoint = L.marker(e.latlng).addTo(map);
 
     // Assign popup
-    var popup = L.popup(e.latlng),
-      geocode,
-      map;
+    var popup = L.popup();
 
     // Assign geocode, getting the location details and loading
     // them into the popup

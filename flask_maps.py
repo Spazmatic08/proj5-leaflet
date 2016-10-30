@@ -11,13 +11,17 @@ from flask import url_for
 import json
 import logging
 
+# Own modules
+from maps import POI
+
 ###
 # Globals
 ###
 app = flask.Flask(__name__)
 import CONFIG
 
-
+# The points of interest from our POI file
+POIs = POI( CONFIG.poi )
 
 ###
 # Pages
@@ -27,6 +31,7 @@ import CONFIG
 @app.route("/index")
 def index():
     app.logger.debug("Main page entry")
+    flask.g.poi = POIs.points
     return flask.render_template('maps.html')
 
 
@@ -42,7 +47,6 @@ def page_not_found(error):
 # Set up to run from cgi-bin script,
 # from gunicorn, or stand-alone.
 #
-app.secret_key = CONFIG.secret_key
 app.debug=CONFIG.DEBUG
 app.logger.setLevel(logging.DEBUG)
 if __name__ == "__main__":
